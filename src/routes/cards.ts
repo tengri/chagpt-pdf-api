@@ -12,9 +12,9 @@ cardsRouter.delete('/cards/:cardId', deleteCard);
 
 cardsRouter.get('/cards', getCards);
 
-cardsRouter.put('/cards/:cardId/likes');
+cardsRouter.delete('/cards/:cardId', deleteCard);
 
-cardsRouter.delete('/cards/:cardId', likeCard);
+cardsRouter.put('/cards/:cardId/likes', likeCard);
 
 cardsRouter.delete('/cards/:cardId/likes', unlikeCard);
 

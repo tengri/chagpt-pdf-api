@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import User from '../models/user';
 
-import { createUser, getUser, updateUser } from '../controllers/users';
+import {
+  createUser, getUser, updateUser, getUserById, updateUserAvatar,
+} from '../controllers/users';
 
 const usersRouter = Router();
 
@@ -11,13 +12,8 @@ usersRouter.get('/users', getUser);
 
 usersRouter.patch('/users/me', updateUser);
 
-usersRouter.get('/users/:userId', async (req, res) => {
-  res.json(await User.find({ _id: req.params.userId }));
-});
+usersRouter.get('/users/:userId', getUserById);
 
-usersRouter.patch('/users/me/avatar', async (req, res) => {
-  User.findByIdAndUpdate(req.cookies.userId, { avatar: req.body.avatar });
-  res.send();
-});
+usersRouter.patch('/users/me/avatar', updateUserAvatar);
 
 export default usersRouter;
