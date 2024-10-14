@@ -11,15 +11,17 @@ export type TCard = {
 type TCardModel = Document & TCard;
 
 const CardSchema: Schema = new Schema({
-    name: { type: String, required: true },
-    link: { type: String, required: true },
-    owner: { type: String, required: true },
-    likes: { type: Array, default: [] },
-    createdAt: { type: Date, default: Date.now },
+  name:
+    {
+      type: String,
+      required: true,
+    },
+  link: { type: String, required: true },
+  owner: { type: String, required: true },
+  likes: { type: Array, default: [] },
+  createdAt: { type: Date, default: Date.now },
 });
 
-
-// Use the schema to create a model
 const Card = mongoose.model<TCardModel>('Card', CardSchema);
 
 export default Card;
