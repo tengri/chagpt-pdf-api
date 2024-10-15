@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 
 import usersRouter from './routes/users';
 import cardsRouter from './routes/cards';
+import { errorMessage500 } from './constants';
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
@@ -33,6 +34,18 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(usersRouter);
 app.use(cardsRouter);
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    // если у ошибки нет статуса, выставляем 500
+    const { message } = err;
+    
+  return res
+    .status(500)
+    .send({
+    // проверяем статус и выставляем сообщение в зависимости от него
+    message: message || errorMessage500,
+    });
+}); 
 
 app.listen(PORT, () => {
     // Если всё работает, консоль покажет, какой порт приложение слушает
