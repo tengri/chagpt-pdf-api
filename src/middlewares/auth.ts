@@ -8,6 +8,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
   if (!token) {
     return next({ status: UNAUTHORIZED_STATUS, message: UNAUTHORIZED_MESSAGE });
   }
+
   const tokenData = await jwt.verify(token, AUTH_SECRET) as { userId: string };
   req.cookies.userId = tokenData.userId;
 

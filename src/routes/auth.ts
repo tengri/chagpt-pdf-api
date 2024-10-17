@@ -14,6 +14,11 @@ authRouter.post('/signup', signUp, celebrate({
   }),
 }));
 
-authRouter.post('/signin', signIn);
+authRouter.post('/signin', signIn, celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().email(),
+    password: Joi.string().required().min(6).max(30),
+  }),
+}));
 
 export default authRouter;

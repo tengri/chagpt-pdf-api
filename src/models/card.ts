@@ -16,8 +16,15 @@ const CardSchema: Schema = new Schema({
       type: String,
       required: true,
     },
-  link: { type: String, required: true },
-  owner: { type: String, required: true },
+  link: {
+    type: String,
+    required: true,
+    validate: {
+      // eslint-disable-next-line max-len
+      validator: (v: string) => /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/.test(v),
+    },
+  },
+  owner: { type: Schema.Types.ObjectId, required: true },
   likes: { type: Array, default: [] },
   createdAt: { type: Date, default: Date.now },
 });

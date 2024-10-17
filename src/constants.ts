@@ -1,8 +1,10 @@
 export const INTERNAL_ERROR_MESSAGE = 'Internal Server Error';
 export const NOT_FOUND_MESSAGE = 'Not Found';
+export const FORBIDDEN_MESSAGE = 'Forbidden';
 export const BAD_REQUEST_MESSAGE = 'Bad Request';
 export const WRONG_CREDENTIALS_MESSAGE = 'Wrong email or password';
 export const UNAUTHORIZED_MESSAGE = 'Unauthorized';
+export const OK_MESSAGE = 'Ok';
 
 export const INTERNAL_ERROR_STATUS = 500;
 export const NOT_FOUND_STATUS = 404;

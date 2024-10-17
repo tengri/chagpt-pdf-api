@@ -25,7 +25,6 @@ const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
 });
 
-// Use the schema to create a model
 const User = mongoose.model<TUserModel>('users', UserSchema);
 
 export default User;

@@ -21,12 +21,10 @@ import {
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
-// Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 
 const app = express();
 
-app.use(errorLogger);
 app.use(requestLogger);
 app.use(cookieParser());
 app.use(express.json());
@@ -39,23 +37,18 @@ app.use(auth);
 app.use(usersRouter);
 app.use(cardsRouter);
 
-app.get('*', (req: Request, res: Response) => res.status(NOT_FOUND_STATUS).send(NOT_FOUND_MESSAGE));
+app.use(
+  '*',
+  (req: Request, res: Response, next: NextFunction) => next({ status: NOT_FOUND_MESSAGE, message: NOT_FOUND_MESSAGE }),
+);
 
 app.use(errors());
+app.use(errorLogger);
+
 app.use((err: Error & {status: number; message: string}, req: Request, res: Response, next: NextFunction) => {
   res.status(err.status || INTERNAL_ERROR_STATUS).send({ message: err.message || INTERNAL_ERROR_MESSAGE });
 });
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
-});
-
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  // Clean up resources if needed
-});
-
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Rejection:', err);
-  // Clean up resources if needed
 });
