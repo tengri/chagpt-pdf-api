@@ -19,3 +19,6 @@ dists
 
 
 .history
+
+error.log
+request.log
