@@ -6,7 +6,14 @@ import {
 
 const cardsRouter = Router();
 
-cardsRouter.post('/cards', createCard);
+// cardsRouter.post('/cards', createCard, ersRouter.post('/signup', signUp,
+// y: Joi.object().keys({
+// mail: Joi.string().email(),
+// assword: Joi.string().required(
+// }),
+// )
+// );
+//
 
 cardsRouter.delete('/cards/:cardId', deleteCard);
 

@@ -4,9 +4,10 @@ import Card, { TCard } from '../models/card';
 import { BAD_REQUEST_MESSAGE, BAD_REQUEST_STATUS } from '../constants';
 
 export const createCard = async (req: Request<null, null, Pick<TCard, 'link' | 'name'>>, res: Response) => {
-  const post = new Card({ name: req.body.name, link: req.body.link, owner: req.cookies.userId });
-  await post.save();
-  return res.send();
+  const card = new Card({ name: req.body.name, link: req.body.link, owner: req.cookies.userId });
+  console.log('card:', card);
+  await card.save();
+  return res.send({ card });
 };
 
 export const deleteCard = async (req: Request, res: Response) => {

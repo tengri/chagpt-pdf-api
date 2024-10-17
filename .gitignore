@@ -15,4 +15,7 @@ node_modules
 .vscode
 
 # Typescript build
-dist 
+dists
+
+
+.history
