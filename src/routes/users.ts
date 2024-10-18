@@ -14,11 +14,15 @@ usersRouter.get('/users', getUsers);
 usersRouter.patch(
   '/users/me',
   updateUser,
-  celebrate({ body: Joi.object().keys({ name: Joi.string().required(), about: Joi.string().required() }) }),
+  celebrate({ body: Joi.object().keys({ name: Joi.string().required(), about: Joi.string().required().min(2).max(30) }) }),
 );
 
-usersRouter.get('/users/:userId', getUserById);
+usersRouter.get('/users/:userId', getUserById, celebrate({ params: { userId: Joi.string().required().min(2).max(30) } }));
 
-usersRouter.patch('/users/me/avatar', updateUserAvatar);
+usersRouter.patch(
+  '/users/me/avatar',
+  updateUserAvatar,
+  celebrate({ body: Joi.object().keys({ avatar: Joi.string().required().uri() }) }),
+);
 
 export default usersRouter;

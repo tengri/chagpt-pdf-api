@@ -29,7 +29,6 @@ app.use(requestLogger);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
 
 app.use(authRouter);
 app.use(auth);
@@ -45,7 +44,7 @@ app.use(
 app.use(errors());
 app.use(errorLogger);
 
-app.use((err: Error & {status: number; message: string}, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error & {status: number; message: string}, req: Request, res: Response) => {
   res.status(err.status || INTERNAL_ERROR_STATUS).send({ message: err.message || INTERNAL_ERROR_MESSAGE });
 });
 

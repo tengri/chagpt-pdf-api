@@ -4,13 +4,13 @@ import jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/user';
 
 import {
-  BAD_REQUEST_MESSAGE, BAD_REQUEST_STATUS, WRONG_CREDENTIALS_MESSAGE, AUTH_SECRET,
+  BAD_REQUEST_STATUS, WRONG_CREDENTIALS_MESSAGE, AUTH_SECRET,
   CONFLICT_STATUS,
   INTERNAL_ERROR_MESSAGE,
   INTERNAL_ERROR_STATUS,
 } from '../constants';
 
-export const getUsers = async (req: Request, res: Response) => res.json({});
+export const getUsers = async (req: Request, res: Response) => res.send(await User.find({}));
 
 export const getMe = async (req: Request, res: Response) => {
   const user = await User.findById(req.cookies.userId);
@@ -26,23 +26,18 @@ export const updateUser = async (req: Request<{user: IUser}>, res: Response) => 
   return res.send(newUserData);
 };
 
-export const getUserById = async (req: Request<{userId: string}>, res: Response) => {
-  if (typeof req.params.userId === 'string') {
-    res.sendStatus(BAD_REQUEST_STATUS).send({ message: BAD_REQUEST_MESSAGE });
-  }
-  return res.json(await User.findById(req.params.userId));
-};
+export const getUserById = async (req: Request<{userId: string}>, res: Response) => res.send(await User.findById(req.params.userId));
 
-export const updateUserAvatar = async (req: Request<{avatar: string}>, res: Response) => {
+export const updateUserAvatar = async (req: Request<{avatar: string}>, res: Response, next: NextFunction) => {
   try {
     await User.findByIdAndUpdate(req.cookies.userId, { avatar: req.body.avatar });
   } catch (err) {
-    return res.status(INTERNAL_ERROR_STATUS).send({ message: INTERNAL_ERROR_MESSAGE });
+    return next({ message: INTERNAL_ERROR_MESSAGE, status: INTERNAL_ERROR_STATUS });
   }
   return res.send({ avatar: req.body.avatar });
 };
 
-export const signUp = async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { password, email } = req.body;
   const hash = await bcrypt.hash(password, 10);
 
@@ -53,7 +48,7 @@ export const signUp = async (req: Request, res: Response) => {
     });
   } catch (err) {
     if ((err instanceof Error) && err.message.startsWith('E11000')) {
-      return res.status(CONFLICT_STATUS).send({ message: 'Email already exists' });
+      return next({ status: CONFLICT_STATUS, message: 'Email already exists' });
     }
   }
 
@@ -67,7 +62,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
     const user = await User.findOne({ email }).select('+password');
 
     if (!user || !await bcrypt.compare(req.body.password, user.password)) {
-      return res.status(BAD_REQUEST_STATUS).send(WRONG_CREDENTIALS_MESSAGE);
+      return next({ status: BAD_REQUEST_STATUS, message: WRONG_CREDENTIALS_MESSAGE });
     }
 
     const token = await jwt.sign(

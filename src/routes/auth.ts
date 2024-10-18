@@ -7,18 +7,18 @@ import {
 
 const authRouter = Router();
 
-authRouter.post('/signup', signUp, celebrate({
+authRouter.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().email(),
-    password: Joi.string().required().min(6).max(30),
+    password: Joi.string().required(),
   }),
-}));
+}), signUp);
 
-authRouter.post('/signin', signIn, celebrate({
+authRouter.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().email(),
-    password: Joi.string().required().min(6).max(30),
+    password: Joi.string().required(),
   }),
-}));
+}), signIn);
 
 export default authRouter;

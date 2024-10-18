@@ -1,34 +1,36 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import isURL from 'validator/lib/isURL';
 
-export type TCard = {
+export interface ICard {
     name: string;
     link: string;
     owner: string;
-    likes: string[];
+    likes: Schema.Types.ObjectId[];
     createdAt: Date;
 }
 
-type TCardModel = Document & TCard;
+interface ICardModel extends Document, ICard { }
 
 const CardSchema: Schema = new Schema({
   name:
     {
       type: String,
       required: true,
+      minlength: 2,
+      maxlength: 30,
     },
   link: {
     type: String,
     required: true,
     validate: {
-      // eslint-disable-next-line max-len
-      validator: (v: string) => /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/.test(v),
+      validator: isURL,
     },
   },
   owner: { type: Schema.Types.ObjectId, required: true },
-  likes: { type: Array, default: [] },
+  likes: { type: Array<Schema.Types.ObjectId>, default: [] },
   createdAt: { type: Date, default: Date.now },
 });
 
-const Card = mongoose.model<TCardModel>('Card', CardSchema);
+const Card = mongoose.model<ICardModel>('Card', CardSchema);
 
 export default Card;
