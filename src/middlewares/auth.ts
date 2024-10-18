@@ -9,10 +9,11 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     return next({ status: UNAUTHORIZED_STATUS, message: UNAUTHORIZED_MESSAGE });
   }
 
-  const tokenData = await jwt.verify(token, AUTH_SECRET) as { userId: string };
-  req.cookies.userId = tokenData.userId;
-
-  return next();
+  try {
+    const tokenData = await jwt.verify(token, AUTH_SECRET) as { userId: string };
+    req.cookies.userId = tokenData.userId;
+    return next();
+  } catch (err) { return next({ status: UNAUTHORIZED_STATUS, message: UNAUTHORIZED_MESSAGE }); }
 };
 
 export default auth;
