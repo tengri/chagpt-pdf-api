@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+import { ObjectId } from 'mongoose';
 import { UNAUTHORIZED_MESSAGE, UNAUTHORIZED_STATUS, AUTH_SECRET } from '../constants';
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
@@ -10,8 +11,9 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    const tokenData = await jwt.verify(token, AUTH_SECRET) as { userId: string };
-    req.cookies.userId = tokenData.userId;
+    const tokenData = await jwt.verify(token, AUTH_SECRET) as { userId: ObjectId };
+    req.user = { _id: tokenData.userId };
+
     return next();
   } catch (err) { return next({ status: UNAUTHORIZED_STATUS, message: UNAUTHORIZED_MESSAGE }); }
 };
